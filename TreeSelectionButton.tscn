@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bd8icgshyra18"]
+
+[ext_resource type="Script" path="res://TreeSelectionButton.gd" id="1_oylks"]
+
+[node name="Button" type="Button"]
+offset_right = 125.0
+offset_bottom = 125.0
+script = ExtResource("1_oylks")
