@@ -1,6 +1,13 @@
 extends Node2D
 
 @export var spawn_tree = preload( "res://Tree.tscn" )
+
+func SelectTree( tree ):
+	Utils.selected = tree
+	tree.get_node( "SelectionArea2D" ).ChangeSelectedState( true )
+
+	# Make the buttons visible.
+	$CentralTreeButtons.MakeEmptyVisible()
 		
 func SpawnTree( tree_material ):		
 	# Instantatiate a new tree.
@@ -13,11 +20,7 @@ func SpawnTree( tree_material ):
 	tree.selection_toggled.connect( _on_tree_toggled )
 	
 	# Make the tree selected.
-	Utils.selected = tree
-	tree.get_node( "SelectionArea2D" ).ChangeSelectedState( true )
-
-	# Make the buttons visible.
-	$CentralTreeButtons.MakeEmptyVisible()
+	self.SelectTree( tree )
 	$Cancel.visible = true
 		
 func _on_option_pressed():
@@ -36,26 +39,17 @@ func _on_option_3_pressed():
 		SpawnTree( oak_tree_material )
 
 func _on_tree_toggled( toggled_tree ):
-	pass
+	if Utils.selected.get_parent().name == "Plants":
+		# Destroy selected plant.
+		Utils.selected.queue_free()
+		$Plants.remove_child( Utils.selected )
+		$Plants.OrganizePlants()
 
-# THIS FUNCTION IS LIKELY NO LONGER NECCESSARY. CAN PIECE IT OUT.
-func ChangeSelection( potential_selection ):
-	# Check if anything is selected.
-	if potential_selection == null:
-		Utils.selected = null
-
-	elif Utils.selected == null:
-		Utils.selected = potential_selection
-		potential_selection.get_node( "SelectionArea2D" ).ChangeSelectedState( true )
-
-		$CentralTreeButtons.MakeEmptyVisible()
-
-	elif Utils.selected == potential_selection:
-		Utils.selected = null
-		potential_selection.ChangeSelectedState( false )
-
-		$CentralTreeButtons.MakeAllInvisible()
-
+		# Select the tree and change the button status.
+		self.SelectTree( toggled_tree )
+		$Trees.MakeAllSelectable( false )
+		$Cancel.visible = false
+		
 func _on_button_button_pressed_send_self( button ):
 	if Utils.selected != null:
 		Utils.selected.position.x = button.global_position.x + ( button.size.x / 2 )
@@ -90,9 +84,7 @@ func _on_cancel_pressed():
 		$Plants.remove_child( Utils.selected )
 		$Plants.InstantiateNewPlant()
 		$Plants.OrganizePlants()
-
-		for tree in $Trees.get_children():
-			tree.get_node( "SelectionArea2D" ).ChangeSelectableState( false )
+		$Trees.MakeAllSelectable( false )
 
 	if Utils.button_chosen != null:
 		Utils.button_chosen.ChangeHasTree( false )
@@ -103,19 +95,3 @@ func _on_cancel_pressed():
 	$Confirm.visible = false
 	$Cancel.visible  = false
 	$CentralTreeButtons.MakeAllInvisible()
-
-# BELOW BUTTON WAS DELETED
-func _on_use_plant_pressed():
-	# Make all trees selectable.
-	for tree in $Trees.get_children():
-		tree.get_node( "SelectionArea2D" ).ChangeSelectableState( true )
-
-func _on_plant_selection_toggled( plant ):
-	if Utils.selected == null:
-		Utils.selected = plant
-		plant.get_node( "SelectionArea2D" ).ChangeSelectedState( true )	
-
-		$Cancel.visible = true
-
-		for tree in $Trees.get_children():
-			tree.get_node( "SelectionArea2D" ).ChangeSelectableState( true )

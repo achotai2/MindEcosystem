@@ -17,7 +17,7 @@ func InstantiateNewPlant():
 	var plant = spawn_plant.instantiate()
 	
 	# Attach signal so that selecting tree will change world mouse selection.
-	plant.selection_toggled.connect( self.get_parent()._on_plant_selection_toggled )
+	plant.selection_toggled.connect( self._on_plant_selection_toggled )
 
 	# Get plants position.
 	var num_plants = self.get_children().size()
@@ -37,3 +37,11 @@ func OrganizePlants():
 		plant.position.x = xPos
 		plant.position.y = yPos
 		i += 1
+
+func _on_plant_selection_toggled( plant ):
+	if Utils.selected == null:
+		Utils.selected = plant
+		plant.get_node( "SelectionArea2D" ).ChangeSelectedState( true )	
+
+		$"../Cancel".visible = true
+		$"../Trees".MakeAllSelectable( true )

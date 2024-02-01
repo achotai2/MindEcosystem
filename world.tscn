@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c7ryu1bwcud4e"]
+[gd_scene load_steps=11 format=3 uid="uid://c7ryu1bwcud4e"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_ghh2l"]
 [ext_resource type="Texture2D" uid="uid://ju1duptlpn8l" path="res://Sunny-land-files/Sunny-land-files/Graphical Assets/environment/tileset.png" id="1_ol1o3"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cctsgivfnwvax" path="res://Sunny-land-files/grassTexture.jpg" id="3_s7obx"]
 [ext_resource type="Texture2D" uid="uid://kt8k7l8malls" path="res://Sunny-land-files/Sunny-land-files/Graphical Assets/environment/Props/plant-house.png" id="3_vvarp"]
 [ext_resource type="PackedScene" uid="uid://bd8icgshyra18" path="res://TreeSelectionButton.tscn" id="4_61c71"]
+[ext_resource type="Script" path="res://Trees.gd" id="7_4sekc"]
 [ext_resource type="Script" path="res://Plants.gd" id="7_lofqy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bxtik"]
@@ -593,6 +594,7 @@ position = Vector2(43, 8)
 texture = ExtResource("3_vvarp")
 
 [node name="Trees" type="Node" parent="."]
+script = ExtResource("7_4sekc")
 
 [node name="Plants" type="Node" parent="."]
 script = ExtResource("7_lofqy")
