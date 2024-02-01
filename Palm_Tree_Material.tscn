@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://hmg6ubj0h3wp"]
+
+[ext_resource type="Shader" path="res://Selection.gdshader" id="1_nj1ou"]
+[ext_resource type="Texture2D" uid="uid://balyjx8ntk2ki" path="res://Sunny-land-files/Sunny-land-files/Graphical Assets/environment/Props/palm.png" id="2_jw5p2"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_3jb6h"]
+resource_local_to_scene = true
+shader = ExtResource("1_nj1ou")
+shader_parameter/line_color = Color(1, 1, 1, 1)
+shader_parameter/line_thickness = 0.0
+
+[node name="Sprite2D" type="Sprite2D"]
+material = SubResource("ShaderMaterial_3jb6h")
+texture = ExtResource("2_jw5p2")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://c7ryu1bwcud4e"]
+[gd_scene load_steps=11 format=3 uid="uid://c7ryu1bwcud4e"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_ghh2l"]
 [ext_resource type="Texture2D" uid="uid://ju1duptlpn8l" path="res://Sunny-land-files/Sunny-land-files/Graphical Assets/environment/tileset.png" id="1_ol1o3"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://cctsgivfnwvax" path="res://Sunny-land-files/grassTexture.jpg" id="3_s7obx"]
 [ext_resource type="Texture2D" uid="uid://kt8k7l8malls" path="res://Sunny-land-files/Sunny-land-files/Graphical Assets/environment/Props/plant-house.png" id="3_vvarp"]
 [ext_resource type="PackedScene" uid="uid://bd8icgshyra18" path="res://TreeSelectionButton.tscn" id="4_61c71"]
+[ext_resource type="PackedScene" uid="uid://dux6rok0cf3n5" path="res://Plant.tscn" id="6_2klfh"]
 [ext_resource type="Script" path="res://Plants.gd" id="7_lofqy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_bxtik"]
@@ -597,6 +598,12 @@ texture = ExtResource("3_vvarp")
 [node name="Plants" type="Node" parent="."]
 script = ExtResource("7_lofqy")
 
+[node name="Plant" parent="Plants" instance=ExtResource("6_2klfh")]
+position = Vector2(280, -30)
+
+[node name="Plant2" parent="Plants" instance=ExtResource("6_2klfh")]
+position = Vector2(280, 0)
+
 [connection signal="pressed" from="Option" to="." method="_on_option_pressed"]
 [connection signal="pressed" from="Option2" to="." method="_on_option_2_pressed"]
 [connection signal="pressed" from="Option3" to="." method="_on_option_3_pressed"]
@@ -610,3 +617,5 @@ script = ExtResource("7_lofqy")
 [connection signal="button_pressed_send_self" from="CentralTreeButtons/Button6" to="." method="_on_button_button_pressed_send_self"]
 [connection signal="button_pressed_send_self" from="CentralTreeButtons/Button7" to="." method="_on_button_button_pressed_send_self"]
 [connection signal="button_pressed_send_self" from="CentralTreeButtons/Button8" to="." method="_on_button_button_pressed_send_self"]
+[connection signal="selection_toggled" from="Plants/Plant" to="." method="_on_plant_selection_toggled"]
+[connection signal="selection_toggled" from="Plants/Plant2" to="." method="_on_plant_selection_toggled"]

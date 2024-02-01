@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-signal selection_toggled( tree_id )
+signal selection_toggled( plant )
 
 # Called when the node enters the scene tree for the first time.
 func _ready():

@@ -2,24 +2,38 @@ extends Node2D
 
 @export var spawn_tree = preload( "res://Tree.tscn" )
 		
+func SpawnTree( tree_material ):		
+	# Instantatiate a new tree.
+	var tree_sprite = tree_material.instantiate()
+	var tree = spawn_tree.instantiate()
+	tree.add_child( tree_sprite )
+	$Trees.add_child( tree )
+	
+	# Attach signal so that selecting tree will change world mouse selection.
+	tree.selection_toggled.connect( _on_tree_toggled )
+	
+	# Make the tree selected.
+	Utils.selected = tree
+	tree.get_node( "SelectionArea2D" ).ChangeSelectedState( true )
+
+	# Make the buttons visible.
+	$CentralTreeButtons.MakeEmptyVisible()
+	$Cancel.visible = true
+		
 func _on_option_pressed():
 	if Utils.selected == null:
-		# Instantatiate a new tree.
 		var oak_tree_material = load( "res://Oak_Tree_Material.tscn" )
-		var tree_sprite = oak_tree_material.instantiate()
-		var tree = spawn_tree.instantiate()
-		tree.add_child( tree_sprite )
-		$Trees.add_child( tree )
-		
-		# Attach signal so that selecting tree will change world mouse selection.
-		tree.selection_toggled.connect( _on_tree_toggled )
-		
-		# Make the tree selected.
-		Utils.selected = tree
-		tree.get_node( "SelectionArea2D" ).ChangeSelectedState( true )
+		SpawnTree( oak_tree_material )
 
-		# Make the buttons visible.
-		$CentralTreeButtons.MakeEmptyVisible()
+func _on_option_2_pressed():
+	if Utils.selected == null:
+		var oak_tree_material = load( "res://Palm_Tree_Material.tscn" )
+		SpawnTree( oak_tree_material )
+
+func _on_option_3_pressed():
+	if Utils.selected == null:
+		var oak_tree_material = load( "res://Pine_Tree_Material.tscn" )
+		SpawnTree( oak_tree_material )
 
 func _on_tree_toggled( toggled_tree ):
 	pass
@@ -66,8 +80,20 @@ func _on_confirm_pressed():
 	$Cancel.visible  = false
 
 func _on_cancel_pressed():
-	if Utils.selected != null:
+	if Utils.selected == null:
+		pass
+	elif Utils.selected.get_parent().name == 'Trees':
+		# Delete the tree.
 		Utils.selected.queue_free()
+	elif Utils.selected.get_parent().name == 'Plants':
+		Utils.selected.queue_free()
+		$Plants.remove_child( Utils.selected )
+		$Plants.InstantiateNewPlant()
+		$Plants.OrganizePlants()
+
+		for tree in $Trees.get_children():
+			tree.get_node( "SelectionArea2D" ).ChangeSelectableState( false )
+
 	if Utils.button_chosen != null:
 		Utils.button_chosen.ChangeHasTree( false )
 
@@ -76,13 +102,20 @@ func _on_cancel_pressed():
 		
 	$Confirm.visible = false
 	$Cancel.visible  = false
+	$CentralTreeButtons.MakeAllInvisible()
 
 # BELOW BUTTON WAS DELETED
 func _on_use_plant_pressed():
-	if Utils.plantAmount > 0:
-		# Decrease amount of plant.
-		Utils.plantAmount -= 1
+	# Make all trees selectable.
+	for tree in $Trees.get_children():
+		tree.get_node( "SelectionArea2D" ).ChangeSelectableState( true )
 
-		# Make all trees selectable.
+func _on_plant_selection_toggled( plant ):
+	if Utils.selected == null:
+		Utils.selected = plant
+		plant.get_node( "SelectionArea2D" ).ChangeSelectedState( true )	
+
+		$Cancel.visible = true
+
 		for tree in $Trees.get_children():
-			tree.ChangeSelectableState( true )
+			tree.get_node( "SelectionArea2D" ).ChangeSelectableState( true )

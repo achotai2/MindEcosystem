@@ -1,6 +1,6 @@
 extends StaticBody2D
 
-signal selection_toggled( tree_id )
+signal selection_toggled( tree )
 
 func _process(delta):
 	# Position follows the mouse cursor if it is selected.

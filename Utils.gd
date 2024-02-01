@@ -4,4 +4,4 @@ extends Node
 var selected      = null
 var button_chosen = null
 
-var plantAmount   = 5
+var STARTING_PLANT_AMOUNT = 6
