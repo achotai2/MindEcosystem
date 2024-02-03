@@ -56,7 +56,7 @@ func _on_tree_toggled( toggled_tree ):
 
 		# Select the tree and change the button status.
 		$Trees.MakeAllSelectable( false )
-		$Cancel.visible = false
+#		$Cancel.visible = false
 		self.SelectTree( toggled_tree )
 		
 func _on_button_button_pressed_send_self( button ):
@@ -95,6 +95,9 @@ func _on_cancel_pressed():
 			Utils.selected.queue_free()
 		else:
 			Utils.selected.position = Utils.plant_moved_tree.position
+			var buttonName =  $CentralTreeButtons.GetButton( Utils.plant_moved_tree.name )
+			$CentralTreeButtons.ChangeButtonHasTree( buttonName, Utils.selected.name )
+			Utils.selected.get_node( "SelectionArea2D" ).ChangeSelectedState( false )
 			$Plants.InstantiateNewPlant()
 			$Plants.OrganizePlants()
 			Utils.plant_moved_tree.queue_free()
