@@ -45,10 +45,19 @@ func _on_tree_toggled( toggled_tree ):
 		$Plants.remove_child( Utils.selected )
 		$Plants.OrganizePlants()
 
+		# Create a blue duplicate tree in spot.
+		var blue_tree = toggled_tree.duplicate()
+		blue_tree.get_node( "Sprite2D" ).modulate = Color( 0, 0, 0 )
+		blue_tree.get_node( "Sprite2D" ).set_material( null )
+		self.add_child( blue_tree )
+		Utils.plant_moved_tree = blue_tree
+		var buttonName =  $CentralTreeButtons.GetButton( toggled_tree.name )
+		$CentralTreeButtons.ChangeButtonHasTree( buttonName, blue_tree.name )
+
 		# Select the tree and change the button status.
-		self.SelectTree( toggled_tree )
 		$Trees.MakeAllSelectable( false )
 		$Cancel.visible = false
+		self.SelectTree( toggled_tree )
 		
 func _on_button_button_pressed_send_self( button ):
 	if Utils.selected != null:
@@ -58,27 +67,38 @@ func _on_button_button_pressed_send_self( button ):
 		Utils.selected.get_node( "SelectionArea2D" ).ChangeSelectedState( false )
 
 		Utils.button_chosen = button
-		button.ChangeHasTree( true )
 		$CentralTreeButtons.MakeAllInvisible()
 		
 		$Confirm.visible = true
 		$Cancel.visible  = true
 
 func _on_confirm_pressed():
-	Utils.selected.add_to_group( Utils.button_chosen.name )
+	if Utils.plant_moved_tree != null:
+		$CentralTreeButtons.MakeButtonSelectable( Utils.plant_moved_tree.name )
+		Utils.plant_moved_tree.queue_free()
 
-	Utils.selected      = null
-	Utils.button_chosen = null
+	$CentralTreeButtons.ChangeButtonHasTree( Utils.button_chosen.name, Utils.selected.name )
+
+	Utils.selected         = null
+	Utils.button_chosen    = null
+	Utils.plant_moved_tree = null
 
 	$Confirm.visible = false
 	$Cancel.visible  = false
 
-func _on_cancel_pressed():
+func _on_cancel_pressed():	
 	if Utils.selected == null:
 		pass
 	elif Utils.selected.get_parent().name == 'Trees':
-		# Delete the tree.
-		Utils.selected.queue_free()
+		if Utils.plant_moved_tree == null:
+			# Delete the tree.
+			Utils.selected.queue_free()
+		else:
+			Utils.selected.position = Utils.plant_moved_tree.position
+			$Plants.InstantiateNewPlant()
+			$Plants.OrganizePlants()
+			Utils.plant_moved_tree.queue_free()
+			
 	elif Utils.selected.get_parent().name == 'Plants':
 		Utils.selected.queue_free()
 		$Plants.remove_child( Utils.selected )
@@ -87,10 +107,11 @@ func _on_cancel_pressed():
 		$Trees.MakeAllSelectable( false )
 
 	if Utils.button_chosen != null:
-		Utils.button_chosen.ChangeHasTree( false )
+		$CentralTreeButtons.ChangeButtonHasTree( Utils.button_chosen.name, null )		
 
 	Utils.selected      = null
 	Utils.button_chosen = null
+	Utils.plant_moved_tree = null
 		
 	$Confirm.visible = false
 	$Cancel.visible  = false

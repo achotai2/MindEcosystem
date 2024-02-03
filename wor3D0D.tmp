@@ -430,6 +430,7 @@ sources/0 = SubResource("TileSetAtlasSource_bxtik")
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_ghh2l")
+spawn_tree = null
 
 [node name="TileMap" type="TileMap" parent="."]
 visible = false
